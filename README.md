@@ -15,13 +15,3 @@ External functions : readline, rl_clear_history, rl_on_new_line,
 Our goal is: Write a simple shell!
 Good luck with that!🤘💪🧠
 --------------------------------------------------------------------------------
-
-
-Hello, Yan!
-It is an honor to be your teammate on our first big project! I am eager to work and learn with you. And I know that we can succeed together. I will do my best to contribute good and communicate well 🤝
-I believe in us!✨✨✨
-											©️ One your colleague and your friend, Alex
-
-
-
-# you can leave your message here if you want 🌻

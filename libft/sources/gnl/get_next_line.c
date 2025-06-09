@@ -6,7 +6,7 @@
 /*   By: abaryshe <abaryshe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 10:27:43 by abaryshe          #+#    #+#             */
-/*   Updated: 2025/04/17 05:53:43 by abaryshe         ###   ########.fr       */
+/*   Updated: 2025/06/04 22:09:02 by abaryshe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,7 +99,7 @@ char	*get_next_line(int fd)
 	char		*line;
 	static char	*rest[GNL_OPEN_MAX];
 
-	if (fd < 0 || GNL_BUFFER_SIZE <= 0 || fd > GNL_OPEN_MAX)
+	if (fd < 0 || GNL_BUFFER_SIZE <= 0 || fd >= GNL_OPEN_MAX)
 		return (0);
 	rest[fd] = ft_read_to_rest(fd, rest[fd]);
 	if (!rest[fd])

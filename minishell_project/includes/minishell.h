@@ -6,7 +6,7 @@
 /*   By: abaryshe <abaryshe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 07:40:31 by abaryshe          #+#    #+#             */
-/*   Updated: 2025/05/18 20:56:59 by abaryshe         ###   ########.fr       */
+/*   Updated: 2025/06/04 23:28:54 by abaryshe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,14 @@
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
+// <<<<<<<<<<<<<<<<<<<<< INCLUDES >>>>>>>>>>>>>>>>>>>>>
+
+# include <errno.h>
 # include <dirent.h>
 # include <fcntl.h>
 # include <signal.h>
+# include <bits/sigaction.h> // !
+# include <asm-generic/signal-defs.h> // !
 # include <stdio.h>
 # include <stdlib.h>
 # include <string.h>
@@ -30,71 +35,55 @@
 # include <readline/history.h>
 # include <readline/readline.h>
 # include <term.h>
+# include <limits.h> // For PATH_MAX
+# include <stdbool.h> // For bool type
 
-// --- Project Specific Definitions ---
+# include "../../libft/includes/libft.h"
+# include "ms_structs.h"
 
-// Enum for redirection types
-typedef enum e_redir_type
-{
-	REDIR_INPUT,  // < infile
-	REDIR_OUTPUT, // > outfile (truncate)
-	REDIR_APPEND, // >> outfile (append)
-	REDIR_HEREDOC // << DELIMITER
-}					t_redir_type;
+// <<<<<<<<<<<<<<<<<<<<< MACROS >>>>>>>>>>>>>>>>>>>>>
 
-// Structure for a single redirection
-typedef struct s_redirection
-{
-	t_redir_type	type;
-	char *target;               // Filename for <, >, >>; Delimiter for <<
-	int heredoc_fd;             // Read-end FD for heredoc content. Init to -1.
-	struct s_redirection *next; // Next redirection for the same command
-}					t_redirection;
+extern volatile sig_atomic_t	g_received_signal_value;
 
-// Structure for a single command in a pipeline
-typedef struct s_command
-{
-	char **argv;                    // Argument vector (e.g., {"ls", "-l", NULL}). Must be NULL-terminated.
-	char *cmd_path;
-		// Optional: Full path to executable (resolved by parser, NULL if not found/builtin).
-	t_redirection *redirections;
-		// Linked list of redirections for this command.
-	struct s_command *next_in_pipe;
-		// Pointer to the next command if connected by a pipe, NULL otherwise.
-	pid_t pid;
-		// Process ID of this command after fork (set by executor). Init to 0 or -1.
-	int is_builtin;
-		// Optional: Flag (0 or 1) if command is a builtin (set by parser).
-}					t_command;
+# define ERROR -1
 
-// The main shell structure holding overall state
-typedef struct s_shell
-{
-	char **envp_copy;                             // A modifiable, NULL-terminated copy of the environment.
-	int last_exit_status;
-		// Exit status of the last executed foreground pipeline.
-	t_command *current_command;
-		// Head of the parsed command list for the current input line.
-	volatile sig_atomic_t global_signal_received;
-		// Stores the number of the signal received (e.g., SIGINT).
-	int interactive_mode;                         // 1 if interactive, 0 otherwise (set at startup).
-	struct termios original_termios;
-		// To restore terminal settings on exit.
-}					t_shell;
+# define SYNTAX_ERROR_CODE 2
 
-// --- Function Prototypes ---
+// <<<<<<<<<<<<<<<<<<<<< FUNCTIONS >>>>>>>>>>>>>>>>>>>>>
 
-// Example parser function prototype
-t_command			*parse_line(const char *line, t_shell *shell_data);
+//  -------------------- core --------------------
+// initialization.c:
+t_shell_data	*init_shell_data(char const **envp);
 
-// Example memory freeing function prototype
-void				free_pipeline(t_command *pipeline);
+// signals.c:
+int		setup_signals(void);
+void	process_pending_signal(t_shell_data *shell);
 
-// Example signal setup
-void				setup_signal_handlers(void);
+// cleanup.c:
+void	*free_envp(char **envp_copy);
+void	*free_shell(t_shell_data *shell);
 
-// Some testing:
-void				test_exec(void);
-void				test_pars(void);
+// prompt.c:
+
+// -------------------- execution --------------------
+// ...
+
+// -------------------- parsing --------------------
+// parse_input.c:
+t_command	*parse_input(const char *input, t_shell_data *shell);
+
+// lexer.c:
+t_token	*tokenize_input(const char *input, t_shell_data *shell);
+int		lex_input(const char *input, t_token **tokens, t_shell_data *shell);
+
+// cleanup_pars.c:
+void	free_token_list(t_token *tokens);
+void	free_parsing(t_token *tokens, t_command *commands);
+
+// expand_tokens.c:
+t_token	*expand_tokens(t_token *tokens, t_shell_data *shell);
+
+//       <TESTING>
+void	test_exec(void);
 
 #endif

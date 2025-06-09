@@ -6,7 +6,7 @@
 #    By: abaryshe <abaryshe@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/04/23 07:30:50 by abaryshe          #+#    #+#              #
-#    Updated: 2025/05/16 01:34:03 by abaryshe         ###   ########.fr        #
+#    Updated: 2025/06/04 23:49:42 by abaryshe         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,6 +17,7 @@ OBJ_DIR = objects
 LIBFT_DIR = libft
 EXEC_DIR = minishell_project/sources/execution
 PARS_DIR = minishell_project/sources/parsing
+CORE_DIR = minishell_project/sources/core
 
 FREM = rm -f
 CC = cc
@@ -27,18 +28,20 @@ INCLUDES = -I ${INC_DIR} -I ${LIBFT_DIR}
 #         ||
 #         \/      here, into this variable.
 EXEC_FILES = test_exec.c
-PARS_FILES = test_pars.c
+PARS_FILES = #parse_input.c
+CORE_FILES = initialization.c cleanup.c signals.c
 
 MAIN_SRC = minishell_project/sources/minishell.c
 EXEC_SRCS = $(addprefix ${EXEC_DIR}/, ${EXEC_FILES})
 PARS_SRCS = $(addprefix ${PARS_DIR}/, ${PARS_FILES})
-SRCS = ${MAIN_SRC} ${EXEC_SRCS} ${PARS_SRCS}
+CORE_SRCS = $(addprefix ${CORE_DIR}/, ${CORE_FILES})
+SRCS = ${MAIN_SRC} ${EXEC_SRCS} ${PARS_SRCS} ${CORE_SRCS}
 OBJS = $(addprefix ${OBJ_DIR}/, $(notdir $(SRCS:.c=.o)))
 
 LIBFT = ${LIBFT_DIR}/libft.a
 
 # Tell Make where to find .c files
-vpath %.c minishell_project/sources minishell_project/sources/execution minishell_project/sources/parsing
+vpath %.c minishell_project/sources ${EXEC_DIR} ${PARS_DIR} ${CORE_DIR}
 
 all: ${NAME}
 

@@ -1,20 +1,17 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_isprint.c                                       :+:      :+:    :+:   */
+/*   prompt.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: abaryshe <abaryshe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/18 10:58:18 by abaryshe          #+#    #+#             */
-/*   Updated: 2024/11/22 18:56:30 by abaryshe         ###   ########.fr       */
+/*   Created: 2025/05/31 09:22:13 by abaryshe          #+#    #+#             */
+/*   Updated: 2025/06/03 04:09:48 by abaryshe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "minishell.h"
 
-int	ft_isprint(int c)
+char	*update_prompt(t_shell_data *shell)
 {
-	if (c > 31 && c < 127)
-		return (c);
-	return (0);
 }

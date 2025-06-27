@@ -6,7 +6,7 @@
 /*   By: abaryshe <abaryshe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/25 04:22:00 by abaryshe          #+#    #+#             */
-/*   Updated: 2025/06/04 23:29:10 by abaryshe         ###   ########.fr       */
+/*   Updated: 2025/06/21 19:50:03 by abaryshe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ int	setup_signals(void)
 	if (sigaction(SIGINT, &sa_int, NULL) == -1)
 	{
 		perror("sigaction SIGINT");
-		return (ERROR);
+		return (FAIL);
 	}
 	sa_quit.sa_handler = SIG_IGN;
 	sigemptyset(&sa_quit.sa_mask);
@@ -43,9 +43,9 @@ int	setup_signals(void)
 	if (sigaction(SIGQUIT, &sa_quit, NULL) == -1)
 	{
 		perror("sigaction SIGQUIT");
-		return (ERROR);
+		return (FAIL);
 	}
-	return (0);
+	return (SUCCESS);
 }
 
 void	process_pending_signal(t_shell_data *shell)

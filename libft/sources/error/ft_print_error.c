@@ -6,7 +6,7 @@
 /*   By: abaryshe <abaryshe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/29 14:52:42 by abaryshe          #+#    #+#             */
-/*   Updated: 2025/05/31 09:47:17 by abaryshe         ###   ########.fr       */
+/*   Updated: 2025/06/13 10:11:15 by abaryshe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 /*
  * Prints an error message to STDERR.
  * If msg is NULL,
-	uses perror to print the system error associated with 'object'.
+ * uses perror to print the system error associated with 'object'.
  * If object is NULL, prints only msg.
  * Otherwise, prints "object: msg".
  */

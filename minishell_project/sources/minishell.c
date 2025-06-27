@@ -6,7 +6,7 @@
 /*   By: abaryshe <abaryshe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 17:57:24 by abaryshe          #+#    #+#             */
-/*   Updated: 2025/06/06 19:21:38 by abaryshe         ###   ########.fr       */
+/*   Updated: 2025/06/27 02:29:14 by abaryshe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,14 +87,22 @@ int	main(int argc, char const *argv[], char const *envp[])
 
 	(void)argc;
 	(void)argv;
-	if (setup_signals() == -1)
-		return (ft_print_error(NULL, "Error: Failed to set up signals.\n"),
-			EXIT_FAILURE);
+	if (setup_signals() == FAIL)
+		return (ft_print_error(NULL,
+				"Critical error: Failed to set up signals.\n"), EXIT_FAILURE);
 	shell = init_shell_data(envp);
 	if (!shell)
 		return (ft_print_error(NULL, "Error: Failed to initialize shell.\n"),
 			EXIT_FAILURE);
 	run_shell_loop(shell);
+
+	int				i = 0;
+	while (shell->envp[i])
+	{
+		printf("%s\n", shell->envp[i]);
+		i++;
+	}
+
 	exit_status = shell->last_exit_status;
 	free_shell(shell);
 	printf("\033[0;31mEVERTYTHING WAS FREED.\n\033[0m");

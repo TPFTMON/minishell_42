@@ -6,11 +6,12 @@
 #    By: abaryshe <abaryshe@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/04/23 07:30:50 by abaryshe          #+#    #+#              #
-#    Updated: 2025/06/04 23:49:42 by abaryshe         ###   ########.fr        #
+#    Updated: 2025/06/24 14:53:08 by abaryshe         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = minishell
+MSLIB = mslib.a
 
 INC_DIR = minishell_project/includes
 OBJ_DIR = objects
@@ -28,7 +29,7 @@ INCLUDES = -I ${INC_DIR} -I ${LIBFT_DIR}
 #         ||
 #         \/      here, into this variable.
 EXEC_FILES = test_exec.c
-PARS_FILES = #parse_input.c
+PARS_FILES = create_tokens.c cleanup_parsing.c str_buffer_funcs.c is_character.c test_create_tokens.c test_str_buffer.c
 CORE_FILES = initialization.c cleanup.c signals.c
 
 MAIN_SRC = minishell_project/sources/minishell.c
@@ -48,6 +49,11 @@ all: ${NAME}
 ${NAME}: ${OBJS} ${LIBFT}
 	${CC} ${CMPFLAGS} ${INCLUDES} ${OBJS} ${LIBFT} -lreadline -o ${NAME}
 
+mslib: ${MSLIB}
+
+${MSLIB}: ${OBJS} ${LIBFT}
+	ar rcs ${MSLIB} ${OBJS} ${LIBFT}
+
 # Compile .c files to .o files in the objects/ directory
 ${OBJ_DIR}/%.o: %.c
 	@mkdir -p ${OBJ_DIR}
@@ -63,6 +69,7 @@ clean:
 
 fclean: clean
 	${FREM} ${NAME}
+	${FREM} ${MSLIB}
 	${MAKE} -C ${LIBFT_DIR} fclean
 
 re: fclean all

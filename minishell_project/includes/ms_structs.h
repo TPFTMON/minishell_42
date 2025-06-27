@@ -6,7 +6,7 @@
 /*   By: abaryshe <abaryshe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/29 12:06:56 by abaryshe          #+#    #+#             */
-/*   Updated: 2025/06/03 09:32:18 by abaryshe         ###   ########.fr       */
+/*   Updated: 2025/06/21 19:13:59 by abaryshe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,21 +84,27 @@ typedef enum e_token_type
 {
 	TOKEN_WORD,          // A command, argument, filename, or expanded string
 	TOKEN_PIPE,          // |
-	TOKEN_REDIR_IN,      // <
-	TOKEN_REDIR_OUT,     // > (truncate)
+	TOKEN_REDIR_INPUT,   // <
+	TOKEN_REDIR_OUTPUT,  // > (truncate)
 	TOKEN_REDIR_APPEND,  // >> (append)
 	TOKEN_REDIR_HEREDOC, // << (here-document)
+	TOKEN_NEWLINE,		 // Represents the end of command sequence
+	TOKEN_ERROR			 // Represents lexical error
 }	t_token_type;
 
 typedef struct s_token
 {
-	char			*value;     // The string content of the token
 	t_token_type	type;       // The type of the token
+	char			*content;   // The string content of the token
 	struct s_token	*next;      // For creating a linked list of tokens
-	// Optional: Might add flags later if needed, e.g., to indicate if a
-	// TOKEN_WORD was originally quoted, which can influence expansion details
-	// for more advanced scenarios, but for mandatory, keeping it simple is fine.
-	int				flags;
-}   t_token;
+}	t_token;
+
+typedef struct s_str_buffer
+{
+	char	*str;
+	size_t	len;
+	size_t	capacity;
+}	t_str_buffer;
+
 
 #endif

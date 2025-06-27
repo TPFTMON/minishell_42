@@ -1,18 +1,35 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   test_pars.c                                        :+:      :+:    :+:   */
+/*   test_create_tokens.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: abaryshe <abaryshe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/05/15 23:22:01 by abaryshe          #+#    #+#             */
-/*   Updated: 2025/05/15 23:22:10 by abaryshe         ###   ########.fr       */
+/*   Created: 2025/06/18 10:27:22 by abaryshe          #+#    #+#             */
+/*   Updated: 2025/06/21 12:04:45 by abaryshe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	test_pars(void)
+void	print_token(t_token *token)
 {
-	printf("test_pars\n");
+	if (!token)
+	{
+		printf("(NULL)\n");
+		return ;
+	}
+	printf("Token Type: [%d], Content: [%s]\n \\/\n",
+		token->type, token->content);
+}
+
+void	print_token_list(t_token *tokens)
+{
+	t_token *current = tokens;
+	while (current)
+	{
+		print_token(current);
+		current = current->next;
+	}
+	print_token(current);
 }

@@ -6,11 +6,12 @@
 /*   By: abaryshe <abaryshe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/17 19:15:25 by abaryshe          #+#    #+#             */
-/*   Updated: 2024/11/17 21:33:16 by abaryshe         ###   ########.fr       */
+/*   Updated: 2025/06/27 00:50:44 by abaryshe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
+// #include "../../includes/libft.h"
 
 char	*ft_substr(char const *s, unsigned int start, size_t len)
 {
@@ -38,8 +39,8 @@ int	main(void)
 	char	*str;
 	char	*little;
 
-	str = "THIS IS EPIC<3. I NEED IT";
-	little = ft_substr(str, 0, 7);
+	str = "THIS IS EPIC<3 HELL I NEED IT";
+	little = ft_substr(str, 12, 7);
 	printf("%s\n", little);
 	free(little);
 	return (0);

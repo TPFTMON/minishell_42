@@ -1,35 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   test_create_tokens.c                               :+:      :+:    :+:   */
+/*   codes.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: abaryshe <abaryshe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/06/18 10:27:22 by abaryshe          #+#    #+#             */
-/*   Updated: 2025/06/21 12:04:45 by abaryshe         ###   ########.fr       */
+/*   Created: 2025/07/01 14:53:11 by abaryshe          #+#    #+#             */
+/*   Updated: 2025/07/01 15:13:54 by abaryshe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	print_token(t_token *token)
+void	set_last_exit_status(t_shell_data *shell)
 {
-	if (!token)
-	{
-		printf("(NULL)\n");
-		return ;
-	}
-	printf("Token Type: [%d], Content: [%s]\n \\/\n",
-		token->type, token->content);
-}
-
-void	print_token_list(t_token *tokens)
-{
-	t_token *current = tokens;
-	while (current)
-	{
-		print_token(current);
-		current = current->next;
-	}
-	print_token(current);
+	if ((shell->internal_code == OKAY) || (shell->internal_code == ERROR_CRITICAL))
+		shell->last_exit_status = shell->internal_code;
+	else
+		shell->last_exit_status = 2;
+	shell->internal_code = OKAY;
 }

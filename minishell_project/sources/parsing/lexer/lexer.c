@@ -1,38 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   lex_input.c                                        :+:      :+:    :+:   */
+/*   lexer.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: abaryshe <abaryshe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/03 04:44:08 by abaryshe          #+#    #+#             */
-/*   Updated: 2025/06/27 00:38:07 by abaryshe         ###   ########.fr       */
+/*   Updated: 2025/07/01 23:28:26 by abaryshe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-t_token	*get_next_token(char *input, int *i, t_shell_data *shell)
-{
-	t_token	*new_token;
-  // A. Check for Operator Tokens
-	if (is_metacharacter(input[*i], 0))
-	{
-		create_redir_pipe_token(&new_token, input, &i);
-		if (!new_token)
-			shell->last_exit_status = CRITICAL_ERROR;
-		return (new_token);
-	}
-
-  // B. If not an operator, it must be a WORD token.
-  //    This word can be composed of multiple adjacent segments. Including expandable values.
-	create_word_token(&new_token, input, &i, shell);
-	if (!new_token)
-		shell->last_exit_status = CRITICAL_ERROR;
-	return (new_token);
-}
-
-t_token	*tokenize_input(char *input, t_token *tokens, t_shell_data *shell)
+t_token	*tokenize_input(t_token **tokens, char *input, t_shell_data *shell)
 {
 	int		i;
 	int		input_len;
@@ -40,39 +20,36 @@ t_token	*tokenize_input(char *input, t_token *tokens, t_shell_data *shell)
 
 	i = 0;
 	input_len = ft_strlen(input);
-	while (i < input_len)
+	while ((input[i]) && (i < input_len))
 	{
-		while (ft_isspace(input[i]))
+		while ((input[i]) && (ft_isspace(input[i])))
 			i++;
 		if (i >= input_len)
 			break ;
 		new_token = get_next_token(input, &i, shell);
-		if (new_token->type == TOKEN_ERROR)
+		if (new_token)
+			add_token_back(tokens, new_token);
+		if (shell->internal_code != OKAY)
 		{
-			ft_print_error(NULL, "Error: syntax\n");
+			print_lexer_errors(shell->internal_code);
 			free_token_list(tokens);
 			return (NULL);
 		}
-		add_token_back(&tokens, new_token);
 	}
-	return (tokens);
+	return (*tokens);
 }
 
 t_token	*lex_input(char *input, t_shell_data *shell)
 {
 	t_token	*tokens;
-	int		status;
 
 	if (!input || input[0] == '\0')
 		return (NULL);
 	tokens = NULL;
-	tokenize_input(input, &tokens, shell);
+	tokenize_input(&tokens, input, shell);
+	set_last_exit_status(shell);
 	if (shell->last_exit_status != 0)
-	{
-		if (tokens)
-			free_token_list(tokens);
 		return (NULL);
-	}
 	return (tokens);
 }
 
@@ -174,7 +151,7 @@ t_token	*lex_input(char *input, t_shell_data *shell)
 		// new_token = get_next_token(input, &i, shell);
 		// if (new_token->type == TOKEN_ERROR)
 		// {
-			// ft_print_error(NULL, "Error: syntax\n");
+			// print_error(NULL, "Error: syntax\n");
 			// free_token_list(tokens);
 			// return (NULL);
 		// }

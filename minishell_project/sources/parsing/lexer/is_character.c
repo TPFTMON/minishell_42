@@ -6,7 +6,7 @@
 /*   By: abaryshe <abaryshe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/09 17:19:09 by abaryshe          #+#    #+#             */
-/*   Updated: 2025/06/24 15:58:54 by abaryshe         ###   ########.fr       */
+/*   Updated: 2025/06/28 14:02:43 by abaryshe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,11 @@
  * If expanded is true is_metacharacter checks for a dollar sign ('$').
  * Otherwise, it checks for redirections and a pipe ('<', '>', '|').
  */
-int	is_metacharacter(int ch, int expanded)
+int	is_metacharacter(int c, int expanded)
 {
+	char	ch;
+
+	ch = (char)c;
 	if (expanded)
 	{
 		if (ch == '$')

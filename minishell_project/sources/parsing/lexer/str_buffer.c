@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   str_buffer_funcs.c                                 :+:      :+:    :+:   */
+/*   str_buffer.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: abaryshe <abaryshe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/02 08:33:01 by abaryshe          #+#    #+#             */
-/*   Updated: 2025/06/24 15:57:51 by abaryshe         ###   ########.fr       */
+/*   Updated: 2025/06/29 04:58:40 by abaryshe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,21 +80,6 @@ int	append_str_buffer(t_str_buffer *buf, const char *str_to_append)
 	ft_strlcat(buf->str, str_to_append, buf->capacity);
 	buf->len += len_to_append;
 	return (SUCCESS);
-}
-
-/*
- * Finalize the buffer by returning the owned string.
- * The buffer struct is freed.
- */
-char	*finalize_buffer(t_str_buffer *buf)
-{
-	char	*final_str;
-
-	if (!buf)
-		return (NULL);
-	final_str = buf->str;
-	free_str_buffer(buf);
-	return (final_str);
 }
 
 // int main(void)

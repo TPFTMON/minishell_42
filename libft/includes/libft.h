@@ -6,7 +6,7 @@
 /*   By: abaryshe <abaryshe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/11 17:59:00 by abaryshe          #+#    #+#             */
-/*   Updated: 2025/06/13 10:11:55 by abaryshe         ###   ########.fr       */
+/*   Updated: 2025/07/02 00:25:49 by abaryshe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,8 +118,8 @@ void				*ft_calloc(size_t count, size_t size);
  * If object is NULL, prints only msg.
  * Otherwise, prints "object: msg".
  */
-void				ft_print_error(char *object, char *msg);
-int					ft_print_error_with_code(char *object, char *msg,
+void				print_error(char *object, char *msg);
+int					print_error_with_code(char *object, char *msg,
 						int error_code);
 
 // file descriptor functions.

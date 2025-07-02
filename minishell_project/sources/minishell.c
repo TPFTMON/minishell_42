@@ -6,7 +6,7 @@
 /*   By: abaryshe <abaryshe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 17:57:24 by abaryshe          #+#    #+#             */
-/*   Updated: 2025/06/27 02:29:14 by abaryshe         ###   ########.fr       */
+/*   Updated: 2025/07/02 03:58:24 by abaryshe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,18 +47,19 @@ void	run_shell_loop(t_shell_data *shell)
 		if (shell->interactive_mode)
 			add_history(input);
 		// F. Parse the Input
-		// shell->current_command = parse_input(input, shell);
-		// if (!shell->current_command)
-		// { // Parsing failed (syntax error or critical error)
-		// 	if (g_received_signal_value == 0)
-		// 		shell->last_exit_status = SYNTAX_ERROR_CODE;
-		// 	free(input);
-		// 	continue ;
-		// }
+		shell->current_command = parse_input(input, shell);
+		if (!shell->current_command)
+		{
+			if (input)
+				free(input);
+			continue ;
+		}
 		printf("\033[0;32m%s\n\033[0m", input);
 		free(input);
-		// Input line string is now processed or copied by parser
-		// G. Execute Commands
+		print_cmd_list(&shell->current_command);
+		free_cmd_list(&shell->current_command);
+		// // Input line string is now processed or copied by parser
+		// // G. Execute Commandse
 		// if (shell->current_command)
 		// {
 		// 	shell->is_executing = 1; // Set flag before execution
@@ -88,11 +89,11 @@ int	main(int argc, char const *argv[], char const *envp[])
 	(void)argc;
 	(void)argv;
 	if (setup_signals() == FAIL)
-		return (ft_print_error(NULL,
+		return (print_error(NULL,
 				"Critical error: Failed to set up signals.\n"), EXIT_FAILURE);
 	shell = init_shell_data(envp);
 	if (!shell)
-		return (ft_print_error(NULL, "Error: Failed to initialize shell.\n"),
+		return (print_error(NULL, "Error: Failed to initialize shell.\n"),
 			EXIT_FAILURE);
 	run_shell_loop(shell);
 
@@ -143,7 +144,7 @@ int	main(int argc, char const *argv[], char const *envp[])
 // 	shell = init_shell_data(envp);
 // 	if (!shell)
 // 	{
-// 		ft_print_error(NULL, "Error: Failed to initialize shell.\n");
+// 		print_error(NULL, "Error: Failed to initialize shell.\n");
 // 		return (EXIT_FAILURE);
 // 	}
 // 	readline_loop(shell);

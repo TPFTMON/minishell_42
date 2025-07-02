@@ -1,0 +1,14 @@
+a.out
+test_arg.c
+what
+minishell.a
+mslib.a
+minishell
+objects
+*.o
+minishell.h.gch
+*.txt
+libft.a
+test_tokens
+miaou
+testing

@@ -6,7 +6,7 @@
 /*   By: abaryshe <abaryshe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 18:01:33 by abaryshe          #+#    #+#             */
-/*   Updated: 2025/06/03 05:20:05 by abaryshe         ###   ########.fr       */
+/*   Updated: 2025/07/01 23:47:32 by abaryshe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ static char	**copy_envp(char const **envp)
 	{
 		copy[i] = ft_strdup(envp[i]);
 		if (!copy[i])
-			free_envp(copy);
+			free_string_array(copy);
 		i++;
 	}
 	copy[i] = NULL;
@@ -41,7 +41,7 @@ t_shell_data	*init_shell_data(char const **envp)
 {
 	t_shell_data	*shell;
 
-	shell = malloc(sizeof(t_shell_data));
+	shell = (t_shell_data *)malloc(sizeof(t_shell_data));
 	if (!shell)
 		return (NULL);
 	shell->envp = copy_envp(envp);
@@ -60,5 +60,6 @@ t_shell_data	*init_shell_data(char const **envp)
 		tcgetattr(STDIN_FILENO, &shell->original_termios);
 	}
 	shell->is_executing = 0;
+	shell->internal_code = OKAY;
 	return (shell);
 }

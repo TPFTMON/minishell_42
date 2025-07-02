@@ -6,7 +6,7 @@
 /*   By: abaryshe <abaryshe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 07:40:31 by abaryshe          #+#    #+#             */
-/*   Updated: 2025/06/24 18:04:19 by abaryshe         ###   ########.fr       */
+/*   Updated: 2025/07/02 02:22:24 by abaryshe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,6 @@
 
 # include "../../libft/includes/libft.h"
 # include "ms_structs.h"
-
 # include <asm-generic/signal-defs.h> // !
 # include <bits/sigaction.h>          // !
 # include <curses.h>
@@ -54,28 +53,30 @@ extern volatile sig_atomic_t	g_received_signal_value;
 // ...
 # define CMD_NOT_FOUND_ERROR 127
 
-// internal error codes:
-# define SYNTAX_ERROR_PIPE 3
-# define SYNTAX_ERROR_REDIR 4
-# define SYNTAX_ERROR_SINGLE_Q 5
-# define SYNTAX_ERROR_DOUBLE_Q 6
-
-# define ERROR_MSG_SINGLE_QUOTE "Syntax error: unclosed single quotes (\')\n"
-# define ERROR_MSG_DOUBLE_QUOTE "Syntax error: unclosed double quotes (\")\n"
+# define ERROR_MSG_CRITICAL "\e[1;31mCritical\e[0m \e[0;31merror\e[0m: memory failure.\n"
+# define ERROR_MSG_SINGLE_QUOTE "\e[1;31mSyntax\e[0m \e[0;31merror\e[0m: unclosed single quotes (\').\n"
+# define ERROR_MSG_DOUBLE_QUOTE "\e[1;31mSyntax\e[0m \e[0;31merror\e[0m: unclosed double quotes (\").\n"
+# define ERROR_MSG_REDIR "\e[1;31mSyntax\e[0m \e[0;31merror\e[0m: redirection doesn't have a file to redirect.\n"
+# define ERROR_MSG_PIPE "\e[1;31mSyntax\e[0m \e[0;31merror\e[0m: wrong pipe placement.\n"
+# define ERROR_MSG_UNEXPECTED_TOKEN "\e[1;31mSyntax\e[0m \e[0;31merror\e[0m: syntax error near unexpected token.\n"
+# define ERROR_MSG_UNIQUE "\e[1;31mSyntax\e[0m \e[0;31merror\e[0m: an unique error occured.\n"
 
 // <<<<<<<<<<<<<<<<<<<<< FUNCTIONS >>>>>>>>>>>>>>>>>>>>>
 
 //  -------------------- core --------------------
 // initialization.c:
-t_shell_data	*init_shell_data(char const **envp);
+t_shell_data					*init_shell_data(char const **envp);
 
 // signals.c:
-int				setup_signals(void);
-void			process_pending_signal(t_shell_data *shell);
+int								setup_signals(void);
+void							process_pending_signal(t_shell_data *shell);
 
 // cleanup.c:
-void			*free_envp(char **envp_copy);
-void			*free_shell(t_shell_data *shell);
+void							free_redir_list(t_redirection **redirections);
+void							free_cmd(t_command *cmd);
+void							free_cmd_list(t_command **pipeline_head);
+void							*free_string_array(char **envp_copy);
+void							*free_shell(t_shell_data *shell);
 
 // prompt.c:
 
@@ -83,47 +84,115 @@ void			*free_shell(t_shell_data *shell);
 // ...
 
 // -------------------- parsing --------------------
+
+//                <C>   core_parsing   <C>
 // parse_input.c:
-t_command		*parse_input(const char *input,
-					t_shell_data *shell);
-
-// lex_input.c:
-t_token			*lex_input(const char *input,
-					t_shell_data *shell);
-
-// create_tokens.c:
-t_token			*create_token(t_token_type type, char *content);
-void			add_token_back(t_token **tokens,
-					t_token *new_token);
-void			create_redir_pipe_token(t_token **token,
-					char *input, int *i);
-
-// create_word_token.c:
-void			create_word_token(t_token **token, char *input,
-					int *i, t_shell_data *shell);
-
-// str_buffer_funcs.c:
-t_str_buffer	*init_str_buffer(size_t initial_capacity);
-int				append_char_buffer(t_str_buffer *buf, char c);
-int				append_str_buffer(t_str_buffer *buf,
-					const char *str_to_append);
-char			*finalize_buffer(t_str_buffer *buf);
-
-// is_character.c:
-int				is_metacharacter(int ch, int expanded);
+t_command						*parse_input(char *input, t_shell_data *shell);
 
 // cleanup_pars.c:
-void			free_token_list(t_token *tokens);
-void			free_parsing(t_token *tokens,
-					t_command *commands);
-void			free_str_buffer(t_str_buffer *buf);
+void							free_token_list(t_token **tokens);
+void							free_parsing(t_token **tokens,
+									t_command **commands);
+void							free_str_buffer(t_str_buffer *buf);
 
-//      <<<TESTING>>>
-// test_create_tokens.c:
-void			print_token(t_token *token);
-void			print_token_list(t_token *tokens);
+// codes.c:
+void							set_last_exit_status(t_shell_data *shell);
 
-// test_str_buffer.c:
-void			print_str_buffer(t_str_buffer *buf);
+//                 <L>   lexer   <L>
+// lexer.c:
+t_token							*lex_input(char *input, t_shell_data *shell);
+t_token							*tokenize_input(t_token **tokens, char *input,
+									t_shell_data *shell);
+
+// is_character.c:
+int								is_metacharacter(int ch, int expanded);
+
+// tokens_utils.c:
+t_token							*init_token(t_token_type type, char *content,
+									t_shell_data *shell);
+void							add_token_back(t_token **tokens,
+									t_token *new_token);
+
+// tokens.c:
+void							create_word_token(t_token **token, char *input,
+									int *i, t_shell_data *shell);
+void							create_word(t_str_buffer *buf, char *input,
+									int *i, t_shell_data *shell);
+void							create_redir_pipe_token(t_token **token,
+									char *input, int *i, t_shell_data *shell);
+t_token							*get_next_token(char *input, int *i,
+									t_shell_data *shell);
+
+// str_buffer.c:
+t_str_buffer					*init_str_buffer(size_t initial_capacity);
+int								append_char_buffer(t_str_buffer *buf, char c);
+int								append_str_buffer(t_str_buffer *buf,
+									const char *str_to_append);
+
+// append_quotes.c:
+void							append_double_quotes(t_str_buffer *buf,
+									char *input, int *i, t_shell_data *shell);
+void							append_single_quotes(t_str_buffer *buf,
+									char *input, int *i, t_shell_data *shell);
+
+// expand_env_var.c:
+void							expand_env_var(t_str_buffer *buf, char *input,
+									int *i, t_shell_data *shell);
+void							append_env_name(t_str_buffer *buf, char *input,
+									int *i, t_shell_data *shell);
+char							*get_env_name(char *input, int *i,
+									t_shell_data *shell);
+char							*get_env_value(char *name_to_find,
+									t_shell_data *shell);
+void							append_last_exit_status(t_str_buffer *buf,
+									t_shell_data *shell);
+
+// errors_lexer.c:
+void							print_lexer_errors(t_internal_code error_code);
+
+//                <P>   parser   <P>
+// parser.c:
+t_command						*build_cmd_list(t_token **tokens,
+									t_shell_data *shell);
+t_command						*get_next_cmd(t_token **token_now,
+									t_shell_data *shell);
+
+// command_utils.c:
+t_command						*init_cmd(t_shell_data *shell);
+void							add_cmd_back(t_command **pipeline_head,
+									t_command *new_cmd);
+
+// process_redir.c:
+int								is_redir_token(t_token_type type);
+void							add_redir_back(t_redirection **redirections,
+									t_redirection *new_redir);
+t_redir_type					convert_token_type_to_redir_type(t_token_type token_type);
+t_redirection					*create_redirection(t_token **token_now,
+									t_token_type token_type,
+									t_shell_data *shell);
+void							process_redir_token(t_command *cmd,
+									t_token **token_now, t_shell_data *shell);
+
+// process_word.c:
+void							add_to_argv(t_command *cmd, char *str_to_add,
+									t_shell_data *shell);
+void							process_word_token(t_command *cmd,
+									t_token **token_now, t_shell_data *shell);
+
+// errors_parser.c:
+void							print_and_set_parser_errors(t_shell_data *shell);
+
+//                <T>   testing   <T>
+// print_token.c:
+void							print_token(t_token *token);
+void							print_token_list(t_token **tokens);
+
+// print_buffer.c:
+void							print_str_buffer(t_str_buffer *buf);
+
+// print_cmd.c:
+void							print_redir_list(t_redirection *redirections);
+void							print_cmd(t_command *cmd, size_t i);
+void							print_cmd_list(t_command **pipeline_head);
 
 #endif

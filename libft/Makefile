@@ -6,7 +6,7 @@
 #    By: abaryshe <abaryshe@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/11/11 17:58:52 by abaryshe          #+#    #+#              #
-#    Updated: 2025/06/04 23:45:51 by abaryshe         ###   ########.fr        #
+#    Updated: 2025/07/02 00:25:55 by abaryshe         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -35,7 +35,7 @@ CHAR_FILES = ft_isalnum.c ft_isalpha.c ft_isascii.c ft_isdigit.c \
 # conversion functions in conversion directory:
 CONV_FILES = ft_atoi.c ft_itoa.c
 # error handling functions in error directory:
-ERROR_FILES = ft_print_error.c ft_print_error_with_code.c
+ERROR_FILES = print_error.c print_error_with_code.c
 # file descriptor functions in fd directory:
 FD_FILES = ft_putchar_fd.c ft_putstr_fd.c ft_putendl_fd.c ft_putnbr_fd.c
 # get_next_line functions in gnl directory:

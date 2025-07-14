@@ -66,7 +66,7 @@ char	*get_env_name(char *input, int *i, t_shell_data *shell)
 	return (name_to_find);
 }
 
-char	*get_env_value(char *name_to_find, t_shell_data *shell)
+char	*get_env_val(char *name_to_find, t_shell_data *shell)
 {
 	char	*value;
 	char	*key;
@@ -101,7 +101,7 @@ void	append_env_name(t_str_buffer *buf, char *input, int *i, t_shell_data *shell
 	char	*name_to_find;
 
 	name_to_find = get_env_name(input, i, shell);
-	env_value = get_env_value(name_to_find, shell);
+	env_value = get_env_val(name_to_find, shell);
 	if ((!env_value) && (shell->internal_code != 0))
 	{
 		free(name_to_find);

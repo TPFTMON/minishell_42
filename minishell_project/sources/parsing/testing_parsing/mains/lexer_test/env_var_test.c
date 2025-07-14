@@ -6,7 +6,7 @@
 /*   By: abaryshe <abaryshe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/28 04:46:23 by abaryshe          #+#    #+#             */
-/*   Updated: 2025/07/01 23:28:26 by abaryshe         ###   ########.fr       */
+/*   Updated: 2025/07/02 23:44:58 by abaryshe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,7 +105,7 @@ int	main(int argc, char const *argv[], char const *envp[])
 // 	return (exit_status);
 // }
 
-/* ||| get_env_value ||| : */
+/* ||| get_env_val ||| : */
 // int	main(int argc, char const *argv[], char const *envp[])
 // {
 // 	t_shell_data	*shell;
@@ -129,7 +129,7 @@ int	main(int argc, char const *argv[], char const *envp[])
 // 	char	*name_to_find;
 
 // 	name_to_find = get_env_name(input, &i, shell);
-// 	res = get_env_value(name_to_find, shell);
+// 	res = get_env_val(name_to_find, shell);
 // 	printf("The env name: [%s]\nThe index: [%d]\n", name_to_find, i);
 // 	printf("The %s's value: [%s]\n", name_to_find, res);
 // 	free(name_to_find);

@@ -40,14 +40,14 @@ void	add_redir_back(t_redirection **redirections, t_redirection *new_redir)
 
 t_redir_type	convert_token_type_to_redir_type(t_token_type token_type)
 {
-	if (token_type == TOKEN_REDIR_INPUT)
+	if (token_type == TOKEN_REDIR_HEREDOC)
+		return (REDIR_HEREDOC);
+	else if (token_type == TOKEN_REDIR_APPEND)
+		return (REDIR_APPEND);
+	else if (token_type == TOKEN_REDIR_INPUT)
 		return (REDIR_INPUT);
 	else if (token_type == TOKEN_REDIR_OUTPUT)
 		return (REDIR_OUTPUT);
-	else if (token_type == TOKEN_REDIR_APPEND)
-		return (REDIR_APPEND);
-	else if (token_type == TOKEN_REDIR_HEREDOC)
-		return (REDIR_APPEND);
 	else
 		return (REDIR_NONE);
 }

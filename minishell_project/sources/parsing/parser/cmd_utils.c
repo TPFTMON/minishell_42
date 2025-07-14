@@ -6,7 +6,7 @@
 /*   By: abaryshe <abaryshe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/09 17:54:20 by abaryshe          #+#    #+#             */
-/*   Updated: 2025/07/02 00:38:26 by abaryshe         ###   ########.fr       */
+/*   Updated: 2025/07/11 03:42:53 by abaryshe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,13 @@ t_command	*init_cmd(t_shell_data *shell)
 		return (NULL);
 	}
 	cmd->argv = NULL;
+	// cmd->argv = (char **)malloc(sizeof(char *) * 1);
+	// if (!cmd->argv)
+	// {
+	// 	shell->internal_code = ERROR_CRITICAL;
+	// 	return (NULL);
+	// }
+	// cmd->argv[0] = NULL;
 	cmd->cmd_path = NULL;
 	cmd->redirections = NULL;
 	cmd->next_in_pipe = NULL;

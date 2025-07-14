@@ -6,7 +6,7 @@
 /*   By: abaryshe <abaryshe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 07:40:31 by abaryshe          #+#    #+#             */
-/*   Updated: 2025/07/02 02:22:24 by abaryshe         ###   ########.fr       */
+/*   Updated: 2025/07/13 16:44:13 by sguan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 
 // <<<<<<<<<<<<<<<<<<<<< INCLUDES >>>>>>>>>>>>>>>>>>>>>
 
-# include "../../libft/includes/libft.h"
+# include "libft.h"
 # include "ms_structs.h"
 # include <asm-generic/signal-defs.h> // !
 # include <bits/sigaction.h>          // !
@@ -51,15 +51,20 @@ extern volatile sig_atomic_t	g_received_signal_value;
 # define CRITICAL_ERROR 1
 # define SYNTAX_ERROR 2
 // ...
-# define CMD_NOT_FOUND_ERROR 127
+# define EXIT_CD_CMD_N_FOUND 127
+# define EXIT_CD_SIGINT 130
+
+# define EXIT_MSG_OK "\e[0;32mexiting the minishell\n\e[0m"
 
 # define ERROR_MSG_CRITICAL "\e[1;31mCritical\e[0m \e[0;31merror\e[0m: memory failure.\n"
 # define ERROR_MSG_SINGLE_QUOTE "\e[1;31mSyntax\e[0m \e[0;31merror\e[0m: unclosed single quotes (\').\n"
 # define ERROR_MSG_DOUBLE_QUOTE "\e[1;31mSyntax\e[0m \e[0;31merror\e[0m: unclosed double quotes (\").\n"
-# define ERROR_MSG_REDIR "\e[1;31mSyntax\e[0m \e[0;31merror\e[0m: redirection doesn't have a file to redirect.\n"
+# define ERROR_MSG_REDIR "\e[1;31mSyntax\e[0m \e[0;31merror\e[0m: redirection doesn't have a target.\n"
 # define ERROR_MSG_PIPE "\e[1;31mSyntax\e[0m \e[0;31merror\e[0m: wrong pipe placement.\n"
 # define ERROR_MSG_UNEXPECTED_TOKEN "\e[1;31mSyntax\e[0m \e[0;31merror\e[0m: syntax error near unexpected token.\n"
 # define ERROR_MSG_UNIQUE "\e[1;31mSyntax\e[0m \e[0;31merror\e[0m: an unique error occured.\n"
+
+# define WARNING_MSG_HEREDOC_EOF "\e[1;33mHeredoc\e[0m \e[0;33mwarning\e[0m: EOF was encountered instead of a delimiter.\n"
 
 // <<<<<<<<<<<<<<<<<<<<< FUNCTIONS >>>>>>>>>>>>>>>>>>>>>
 
@@ -75,13 +80,51 @@ void							process_pending_signal(t_shell_data *shell);
 void							free_redir_list(t_redirection **redirections);
 void							free_cmd(t_command *cmd);
 void							free_cmd_list(t_command **pipeline_head);
+void							free_command_list(t_command *cmd);
 void							*free_string_array(char **envp_copy);
 void							*free_shell(t_shell_data *shell);
 
 // prompt.c:
 
 // -------------------- execution --------------------
-// ...
+char							*get_env_value(char **envp, const char *name);
+int								set_env_value(char ***envp, char *key,
+									char *value);
+char							**add_env_value(char ***envp, char *key,
+									char *value);
+
+int								is_builtin(const char *cmd);
+int								execute_builtin(t_shell_data *shell,
+									char **args);
+
+int								builtin_cd(char **args, char ***envp);
+int								builtin_echo(char **args);
+int								builtin_env(char **envp, char **args);
+int								builtin_exit(t_shell_data *shell, char **args);
+int								builtin_export(char **args, char ***envp);
+int								builtin_pwd(char **args);
+int								builtin_unset(char **args, char ***envp);
+
+int								count_commands(t_command *cmd);
+int								setup_pipeline(t_pipex *pipex);
+void							free_pipex(t_pipex *pipex);
+void							close_all_pipes(t_pipex *pipex);
+int								handle_fork_failure(t_pipex *pipex,
+									int created_pids);
+
+int								execute_single_external(t_shell_data *shell,
+									t_command *cmd);
+int								execute_builtin_with_redir(t_shell_data *shell,
+									char **argv, t_redirection *redirections);
+int								execute_pipeline(t_shell_data *shell,
+									t_command *cmd);
+int								executor(t_shell_data *shell, t_command *cmd);
+
+int								find_command_path(t_command *cmd, char **envp);
+int								count_commands(t_command *cmd);
+
+int								handle_redirections(t_redirection *redir);
+int								handle_redirections_only(t_redirection *redir);
 
 // -------------------- parsing --------------------
 
@@ -142,7 +185,7 @@ void							append_env_name(t_str_buffer *buf, char *input,
 									int *i, t_shell_data *shell);
 char							*get_env_name(char *input, int *i,
 									t_shell_data *shell);
-char							*get_env_value(char *name_to_find,
+char							*get_env_val(char *name_to_find,
 									t_shell_data *shell);
 void							append_last_exit_status(t_str_buffer *buf,
 									t_shell_data *shell);
@@ -178,6 +221,12 @@ void							add_to_argv(t_command *cmd, char *str_to_add,
 									t_shell_data *shell);
 void							process_word_token(t_command *cmd,
 									t_token **token_now, t_shell_data *shell);
+
+// process_heredocs.c:
+int								process_heredocs(t_command **pipeline_head,
+									t_shell_data *shell);
+int								process_single_heredoc(t_redirection *redir,
+									t_shell_data *shell);
 
 // errors_parser.c:
 void							print_and_set_parser_errors(t_shell_data *shell);

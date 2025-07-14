@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cleanup.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abaryshe <abaryshe@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sguan <sguan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 19:38:34 by abaryshe          #+#    #+#             */
-/*   Updated: 2025/07/02 03:04:30 by abaryshe         ###   ########.fr       */
+/*   Updated: 2025/07/14 16:39:43 by abaryshe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,14 +50,30 @@ void	*free_string_array(char **str_array)
 	return (NULL);
 }
 
+void	free_command_list(t_command *cmd)
+{
+	t_command	*tmp;
+
+	while (cmd)
+	{
+		tmp = cmd->next_in_pipe;
+		if (cmd->cmd_path)
+			free(cmd->cmd_path);
+		free(cmd);
+		cmd = tmp;
+	}
+}
+
 void	free_cmd(t_command *cmd)
 {
-	if(!cmd)
+	if (!cmd)
 		return ;
 	if (cmd->redirections)
 		free_redir_list(&cmd->redirections);
 	if (cmd->argv)
 		free_string_array(cmd->argv);
+	if (cmd->cmd_path)
+		free(cmd->cmd_path);
 	if (cmd)
 		free(cmd);
 }

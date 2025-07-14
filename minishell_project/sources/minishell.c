@@ -6,7 +6,7 @@
 /*   By: abaryshe <abaryshe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 17:57:24 by abaryshe          #+#    #+#             */
-/*   Updated: 2025/07/02 03:58:24 by abaryshe         ###   ########.fr       */
+/*   Updated: 2025/07/14 17:19:21 by abaryshe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ void	run_shell_loop(t_shell_data *shell)
 		if (!input)
 		{ // EOF (Ctrl+D on empty line) or critical readline error
 			if (shell->interactive_mode)
-				write(STDOUT_FILENO, "exit\n", 5);
+				write(STDOUT_FILENO, EXIT_MSG_OK, 33);
 			break ; // Exit REPL
 		}
 		// D. Handle Empty Input Line (just Enter)
@@ -54,30 +54,20 @@ void	run_shell_loop(t_shell_data *shell)
 				free(input);
 			continue ;
 		}
-		printf("\033[0;32m%s\n\033[0m", input);
+		// printf("\033[0;32m%s\n\033[0m", input);
 		free(input);
 		print_cmd_list(&shell->current_command);
-		free_cmd_list(&shell->current_command);
-		// // Input line string is now processed or copied by parser
-		// // G. Execute Commandse
-		// if (shell->current_command)
-		// {
-		// 	shell->is_executing = 1; // Set flag before execution
-		// 	shell->last_exit_status = execute_command_pipeline(shell);
-		// 	shell->is_executing = 0; // Clear flag after execution
-		// 	free_command_pipeline(shell->current_command);
-		// 	shell->current_command = NULL;
-		// }
-		// else
-		// {
-		// 	// Parsing failed (syntax error) or resulted in no commands.
-		// 	// parse_input should have set shell->last_exit_status.
-		// 	// If not, set a default error status (e.g., 2 for syntax error).
-		// 	if (g_received_signal_value == 0)
-		// 	{   // If no signal caused the parse fail
-		// 		// shell->last_exit_status = SYNTAX_ERROR_CODE;
-		// 	}
-		// }
+		// free_cmd_list(&shell->current_command);
+		// Input line string is now processed or copied by parser
+		// G. Execute Commandse
+		if (shell->current_command)
+		{
+			shell->is_executing = 1; // Set flag before execution
+			executor(shell, shell->current_command);
+			shell->is_executing = 0; // Clear flag after execution
+			free_cmd_list(&shell->current_command);
+			shell->current_command = NULL;
+		}
 	}
 }
 
@@ -97,16 +87,16 @@ int	main(int argc, char const *argv[], char const *envp[])
 			EXIT_FAILURE);
 	run_shell_loop(shell);
 
-	int				i = 0;
-	while (shell->envp[i])
-	{
-		printf("%s\n", shell->envp[i]);
-		i++;
-	}
+	// int				i = 0;
+	// while (shell->envp[i])
+	// {
+	// 	printf("%s\n", shell->envp[i]);
+	// 	i++;
+	// }
 
 	exit_status = shell->last_exit_status;
 	free_shell(shell);
-	printf("\033[0;31mEVERTYTHING WAS FREED.\n\033[0m");
+	printf("\033[0;31mEVERTYTHING WAS FREED?\n\033[0m");
 	return (exit_status);
 }
 

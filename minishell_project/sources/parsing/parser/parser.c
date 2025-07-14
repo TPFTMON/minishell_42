@@ -6,7 +6,7 @@
 /*   By: abaryshe <abaryshe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/30 08:00:26 by abaryshe          #+#    #+#             */
-/*   Updated: 2025/07/02 03:42:26 by abaryshe         ###   ########.fr       */
+/*   Updated: 2025/07/11 03:04:18 by abaryshe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,6 @@ t_command	*get_next_cmd(t_token **token_now, t_shell_data *shell)
 			process_redir_token(cmd, token_now, shell);
 		else if ((*token_now)->type == TOKEN_WORD)
 			process_word_token(cmd, token_now, shell);
-		// check_end_pipe(token_now, shell);
 		if (shell->internal_code != OKAY)
 		{
 			free_cmd(cmd);

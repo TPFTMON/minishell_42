@@ -6,7 +6,7 @@
 /*   By: abaryshe <abaryshe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/29 12:06:56 by abaryshe          #+#    #+#             */
-/*   Updated: 2025/07/02 00:41:36 by abaryshe         ###   ########.fr       */
+/*   Updated: 2025/07/02 23:47:40 by abaryshe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,6 +122,22 @@ typedef struct s_str_buffer
 	size_t				capacity;
 }						t_str_buffer;
 
+// <<<<<<<<<<<<<<<<<<<<< EXECUTION STRUCTURES >>>>>>>>>>>>>>>>>>>>>
+
+typedef struct s_pipex {
+    // Input/output file descriptors for the entire pipeline
+    int     input_fd;   // Input file descriptor (for < redirection at start)
+    int     output_fd;  // Output file descriptor (for > redirection at end)
+
+    // Pipeline information
+    int     cmd_count;  // Number of commands in pipeline
+    int     *pipes;     // Dynamically allocated array of pipe file descriptors
+                       // Size would be 2 * (cmd_count - 1)
+
+    // Process tracking
+    pid_t   *pids;      // Dynamically allocated array of process IDs
+                       // Size would be cmd_count
+} t_pipex;
 
 
 #endif

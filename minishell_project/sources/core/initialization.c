@@ -56,7 +56,7 @@ t_shell_data	*init_shell_data(char const **envp)
 	shell->prompt = NULL;
 	if (shell->interactive_mode)
 	{
-		shell->prompt = "minishell> ";
+		shell->prompt = "\e[1;36mminishell> \e[0m";
 		tcgetattr(STDIN_FILENO, &shell->original_termios);
 	}
 	shell->is_executing = 0;

@@ -6,7 +6,7 @@
 /*   By: abaryshe <abaryshe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/01 09:37:41 by abaryshe          #+#    #+#             */
-/*   Updated: 2025/07/02 00:32:07 by abaryshe         ###   ########.fr       */
+/*   Updated: 2025/07/14 17:16:52 by abaryshe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@ t_command	*parse_input(char *input, t_shell_data *shell)
 		return (NULL);
 	commands = build_cmd_list(&tokens, shell);
 	free_token_list(&tokens);
+	process_heredocs(&commands, shell);
 	if (!commands)
 		return (NULL);
 	return (commands);

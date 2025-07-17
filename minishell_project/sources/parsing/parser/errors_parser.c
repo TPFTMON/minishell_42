@@ -6,7 +6,7 @@
 /*   By: abaryshe <abaryshe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/01 13:00:33 by abaryshe          #+#    #+#             */
-/*   Updated: 2025/07/02 04:02:51 by abaryshe         ###   ########.fr       */
+/*   Updated: 2025/07/18 00:52:59 by abaryshe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 void	print_and_set_parser_errors(t_shell_data *shell)
 {
 	if (shell->internal_code == ERROR_CRITICAL)
-		print_error(NULL, ERROR_MSG_CRITICAL);
+		print_error(NULL, ERROR_MSG_CRITICAL_MEM);
 	else if (shell->internal_code == ERROR_SYNTAX_REDIR)
 		print_error(NULL, ERROR_MSG_REDIR);
 	else if (shell->internal_code == ERROR_SYNTAX_PIPE)

@@ -6,7 +6,7 @@
 /*   By: abaryshe <abaryshe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 18:01:33 by abaryshe          #+#    #+#             */
-/*   Updated: 2025/07/01 23:47:32 by abaryshe         ###   ########.fr       */
+/*   Updated: 2025/07/18 00:52:44 by abaryshe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ t_shell_data	*init_shell_data(char const **envp)
 	shell->prompt = NULL;
 	if (shell->interactive_mode)
 	{
-		shell->prompt = "\e[1;36mminishell> \e[0m";
+		shell->prompt = "minishell> ";
 		tcgetattr(STDIN_FILENO, &shell->original_termios);
 	}
 	shell->is_executing = 0;

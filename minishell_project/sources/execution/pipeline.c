@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipeline.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sguan <sguan@student.42.fr>                +#+  +:+       +#+        */
+/*   By: abaryshe <abaryshe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 17:29:51 by sguan             #+#    #+#             */
-/*   Updated: 2025/06/27 18:53:58 by sguan            ###   ########.fr       */
+/*   Updated: 2025/07/18 00:52:51 by abaryshe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ void	child_cleanup_exit(t_shell_data *shell, t_command *cmd_head,
 	free(shell);
 	exit(status);
 }
-
+/*
 int	child_process(t_command *cmd_head, t_command *cmd, t_shell_data *shell,
 		t_pipex *pipex, int i)
 {
@@ -55,13 +55,14 @@ int	child_process(t_command *cmd_head, t_command *cmd, t_shell_data *shell,
 		return (perror("fork"), EXIT_FAILURE);
 	else if (pipex->pids[i] == 0)
 	{
+		reset_child_signals();
 		if (i > 0)
 			dup2(pipex->pipes[(i - 1) * 2], STDIN_FILENO);
 		if (i < pipex->cmd_count - 1)
 			dup2(pipex->pipes[i * 2 + 1], STDOUT_FILENO);
+		close_all_pipes(pipex);
 		if (cmd->redirections)
 			handle_redirections(cmd->redirections);
-		close_all_pipes(pipex);
 		if (is_builtin(cmd->argv[0]))
 			child_cleanup_exit(shell, cmd_head, pipex, execute_builtin(shell,
 					cmd->argv));
@@ -76,6 +77,63 @@ int	child_process(t_command *cmd_head, t_command *cmd, t_shell_data *shell,
 	}
 	return (EXIT_SUCCESS);
 }
+*/
+
+int child_process(t_command *cmd_head, t_command *cmd, t_shell_data *shell,
+    t_pipex *pipex, int i)
+{
+	int status;
+	char *err_msg;
+	char *full_msg;
+
+    pipex->pids[i] = fork();
+    if (pipex->pids[i] < 0)
+        return (perror("fork"), EXIT_FAILURE);
+    else if (pipex->pids[i] == 0)
+    {
+		reset_child_signals();
+        if (i > 0)
+            dup2(pipex->pipes[(i - 1) * 2], STDIN_FILENO);
+        if (i < pipex->cmd_count - 1)
+            dup2(pipex->pipes[i * 2 + 1], STDOUT_FILENO);
+        close_all_pipes(pipex);
+        if (cmd->redirections)
+            handle_redirections(cmd->redirections);
+        if (cmd->argv && cmd->argv[0])
+        {
+            if (is_builtin(cmd->argv[0]))
+            {
+                status = execute_builtin(shell, cmd->argv);
+                child_cleanup_exit(shell, cmd_head, pipex, status);
+            }
+            else
+            {
+                if (find_command_path(cmd, shell->envp) == 1)
+                {
+                    err_msg = ft_strjoin("minishell: ", cmd->argv[0]);
+                    full_msg = ft_strjoin(err_msg, ": command not found\n");
+                    free(err_msg);
+                    write(STDERR_FILENO, full_msg, ft_strlen(full_msg));
+                    free(full_msg);
+                    child_cleanup_exit(shell, cmd_head, pipex, 127);
+                }
+                execve(cmd->cmd_path, cmd->argv, shell->envp);
+                err_msg = ft_strjoin("minishell: ", cmd->argv[0]);
+                full_msg = ft_strjoin(err_msg, ": ");
+                free(err_msg);
+                err_msg = ft_strjoin(full_msg, strerror(errno));
+                free(full_msg);
+                full_msg = ft_strjoin(err_msg, "\n");
+                free(err_msg);
+                write(STDERR_FILENO, full_msg, ft_strlen(full_msg));
+                free(full_msg);
+                child_cleanup_exit(shell, cmd_head, pipex, 126);
+            }
+        }
+        child_cleanup_exit(shell, cmd_head, pipex, 0);
+    }
+    return (EXIT_SUCCESS);
+}
 
 int	wait_for_children(t_pipex *pipex)
 {
@@ -85,13 +143,20 @@ int	wait_for_children(t_pipex *pipex)
 
 	i = 0;
 	last_status = 0;
+	configure_execution_signals();
 	while (i < pipex->cmd_count)
 	{
 		waitpid(pipex->pids[i], &status, 0);
-		if (WIFEXITED(status))
-			last_status = WEXITSTATUS(status);
+		if (i == pipex->cmd_count - 1)
+		{
+			if (WIFSIGNALED(status))
+				last_status = 128 + WTERMSIG(status);
+			else if (WIFEXITED(status))
+				last_status = WEXITSTATUS(status);
+		}
 		i++;
 	}
+	configure_interactive_signals();
 	return (last_status);
 }
 

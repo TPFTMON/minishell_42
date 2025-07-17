@@ -6,7 +6,7 @@
 /*   By: sguan <sguan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/02 23:21:55 by sguan             #+#    #+#             */
-/*   Updated: 2025/06/27 18:54:49 by sguan            ###   ########.fr       */
+/*   Updated: 2025/07/15 16:10:19 by sguan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,11 +52,10 @@ int	builtin_exit(t_shell_data *shell, char **args)
 		else if (args[2])
 		{
 			ft_dprintf(2, "exit: too many arguments\n");
-			exit_value = 1;
+			return (1);
 		}
 		else
 			exit_value = (unsigned char)value;
 	}
-	// free_shell(shell);
 	exit(exit_value);
 }

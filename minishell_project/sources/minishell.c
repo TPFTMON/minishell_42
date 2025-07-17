@@ -6,11 +6,13 @@
 /*   By: abaryshe <abaryshe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 17:57:24 by abaryshe          #+#    #+#             */
-/*   Updated: 2025/07/14 17:19:21 by abaryshe         ###   ########.fr       */
+/*   Updated: 2025/07/18 00:53:05 by abaryshe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+extern volatile sig_atomic_t	g_received_signal_value;
 
 void	run_shell_loop(t_shell_data *shell)
 {
@@ -18,6 +20,12 @@ void	run_shell_loop(t_shell_data *shell)
 
 	while (1)
 	{
+		if (shell->last_exit_status == 128 + SIGINT) // A
+			print_error(NULL, "\n"); // A
+		else if (shell->last_exit_status == 128 + SIGQUIT) // A
+			print_error(NULL, "Quit (core dumped)\n");
+		// if (configure_interactive_signals() == FAIL)                      // ###
+		// 	return (print_error(NULL, ERROR_MSG_CRITICAL_SIGNALS_INTER)); //###
 		// A. Handle any pending signal from previous command or interruption
 		//    This also resets shell->is_executing if a signal just terminated a command.
 		process_pending_signal(shell);
@@ -56,7 +64,7 @@ void	run_shell_loop(t_shell_data *shell)
 		}
 		// printf("\033[0;32m%s\n\033[0m", input);
 		free(input);
-		print_cmd_list(&shell->current_command);
+		// print_cmd_list(&shell->current_command);
 		// free_cmd_list(&shell->current_command);
 		// Input line string is now processed or copied by parser
 		// G. Execute Commandse
@@ -78,27 +86,26 @@ int	main(int argc, char const *argv[], char const *envp[])
 
 	(void)argc;
 	(void)argv;
-	if (setup_signals() == FAIL)
-		return (print_error(NULL,
-				"Critical error: Failed to set up signals.\n"), EXIT_FAILURE);
+	if (configure_interactive_signals() == FAIL)
+		return (print_error_with_code(NULL, ERROR_MSG_CRITICAL_SIGNALS_INTER,
+				EXIT_FAILURE));
 	shell = init_shell_data(envp);
 	if (!shell)
-		return (print_error(NULL, "Error: Failed to initialize shell.\n"),
-			EXIT_FAILURE);
+		return (print_error_with_code(NULL, ERROR_MSG_CRITICAL_SHELL_DATA,
+				EXIT_FAILURE));
 	run_shell_loop(shell);
-
-	// int				i = 0;
-	// while (shell->envp[i])
-	// {
-	// 	printf("%s\n", shell->envp[i]);
-	// 	i++;
-	// }
-
 	exit_status = shell->last_exit_status;
 	free_shell(shell);
 	printf("\033[0;31mEVERTYTHING WAS FREED?\n\033[0m");
 	return (exit_status);
 }
+
+// int				i = 0;
+// while (shell->envp[i])
+// {
+// 	printf("%s\n", shell->envp[i]);
+// 	i++;
+// }
 
 // void	readline_loop(t_shell_data *shell)
 // {

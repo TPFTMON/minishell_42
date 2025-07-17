@@ -6,11 +6,13 @@
 /*   By: abaryshe <abaryshe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/14 15:49:50 by abaryshe          #+#    #+#             */
-/*   Updated: 2025/07/14 17:18:03 by abaryshe         ###   ########.fr       */
+/*   Updated: 2025/07/18 00:53:02 by abaryshe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+extern volatile sig_atomic_t	g_received_signal_value;
 
 int	process_single_heredoc(t_redirection *redir, t_shell_data *shell)
 {
@@ -20,7 +22,7 @@ int	process_single_heredoc(t_redirection *redir, t_shell_data *shell)
 	if (pipe(pipe_fds) == -1)
 	{
 		perror("minishell: pipe (heredoc)");
-		shell->last_exit_status = 1; // General error
+		shell->last_exit_status = CRITICAL_ERROR; // General error
 		return (FAIL);
 	}
 	while (1)
@@ -33,8 +35,8 @@ int	process_single_heredoc(t_redirection *redir, t_shell_data *shell)
 				free(line);
 			close(pipe_fds[0]); // Cleanup the pipe
 			close(pipe_fds[1]);
-			shell->last_exit_status = 130; // Set status for SIGINT
-			return (FAIL);              // Signal abortion
+			shell->last_exit_status = 128 + SIGINT; // Set status for SIGINT
+			return (FAIL);                          // Signal abortion
 		}
 		// Check for EOF (Ctrl+D)
 		if (!line)
@@ -65,6 +67,9 @@ int	process_heredocs(t_command **pipeline_head, t_shell_data *shell)
 	t_command		*current_cmd;
 	t_redirection	*current_redir;
 
+	// if (configure_heredoc_signals() == FAIL)
+	// 	return (print_error_with_code(NULL, ERROR_MSG_CRITICAL_SIGNALS_HD,
+	// 			FAIL));
 	current_cmd = *pipeline_head;
 	while (current_cmd != NULL)
 	{

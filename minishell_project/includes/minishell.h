@@ -6,7 +6,7 @@
 /*   By: abaryshe <abaryshe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 07:40:31 by abaryshe          #+#    #+#             */
-/*   Updated: 2025/07/13 16:44:13 by sguan            ###   ########.fr       */
+/*   Updated: 2025/07/18 00:53:12 by abaryshe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,9 +54,15 @@ extern volatile sig_atomic_t	g_received_signal_value;
 # define EXIT_CD_CMD_N_FOUND 127
 # define EXIT_CD_SIGINT 130
 
-# define EXIT_MSG_OK "\e[0;32mexiting the minishell\n\e[0m"
+# define EXIT_MSG_OK "\e[0;36mexiting the minishell\n\e[0m"
 
-# define ERROR_MSG_CRITICAL "\e[1;31mCritical\e[0m \e[0;31merror\e[0m: memory failure.\n"
+# define ERROR_MSG_CRITICAL_MEM "\e[1;31mCritical\e[0m \e[0;31merror\e[0m: memory failure.\n"
+# define ERROR_MSG_CRITICAL_SIGNALS_INTER "\e[1;31mCritical\e[0m \e[0;31merror\e[0m: failed to configure the signals.\n"
+# define ERROR_MSG_CRITICAL_SIGNALS_HD "\e[1;31mCritical\e[0m \e[0;31merror\e[0m: failed to configure the signals for heredoc.\n"
+# define ERROR_MSG_CRITICAL_SIGNALS_EXEC "\e[1;31mCritical\e[0m \e[0;31merror\e[0m: failed to configure the signals for execution.\n"
+# define ERROR_MSG_CRITICAL_SIGNALS_CHILD "\e[1;31mCritical\e[0m \e[0;31merror\e[0m: failed to configure the signals in child.\n"
+# define ERROR_MSG_CRITICAL_SHELL_DATA "\e[1;31mCritical\e[0m \e[0;31merror\e[0m: failed to create the main data structure.\n"
+
 # define ERROR_MSG_SINGLE_QUOTE "\e[1;31mSyntax\e[0m \e[0;31merror\e[0m: unclosed single quotes (\').\n"
 # define ERROR_MSG_DOUBLE_QUOTE "\e[1;31mSyntax\e[0m \e[0;31merror\e[0m: unclosed double quotes (\").\n"
 # define ERROR_MSG_REDIR "\e[1;31mSyntax\e[0m \e[0;31merror\e[0m: redirection doesn't have a target.\n"
@@ -73,7 +79,12 @@ extern volatile sig_atomic_t	g_received_signal_value;
 t_shell_data					*init_shell_data(char const **envp);
 
 // signals.c:
-int								setup_signals(void);
+int								configure_interactive_signals(void);
+int								configure_heredoc_signals(void);
+int								configure_execution_signals(void);
+int								reset_child_signals(void);
+
+// process_signals.c:
 void							process_pending_signal(t_shell_data *shell);
 
 // cleanup.c:

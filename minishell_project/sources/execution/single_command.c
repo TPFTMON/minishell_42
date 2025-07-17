@@ -6,7 +6,7 @@
 /*   By: abaryshe <abaryshe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 22:20:02 by sguan             #+#    #+#             */
-/*   Updated: 2025/07/14 16:34:21 by sguan            ###   ########.fr       */
+/*   Updated: 2025/07/18 00:52:54 by abaryshe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,10 +16,9 @@ int	is_builtin(const char *cmd)
 {
 	if (!cmd)
 		return (0);
-	return (!ft_strcmp(cmd, "echo") || !ft_strcmp(cmd, "cd")
-		|| !ft_strcmp(cmd, "pwd") || !ft_strcmp(cmd, "export")
-		|| !ft_strcmp(cmd, "unset") || !ft_strcmp(cmd, "env")
-		|| !ft_strcmp(cmd, "exit"));
+	return (!ft_strcmp(cmd, "echo") || !ft_strcmp(cmd, "cd") || !ft_strcmp(cmd,
+			"pwd") || !ft_strcmp(cmd, "export") || !ft_strcmp(cmd, "unset")
+		|| !ft_strcmp(cmd, "env") || !ft_strcmp(cmd, "exit"));
 }
 
 void	free_arr(char **arr)
@@ -49,7 +48,7 @@ static char	*try_path_cmd(char **paths, char *cmd)
 		{
 			full_path = ft_strjoin(path_with_slash, cmd);
 			free(path_with_slash);
-			if (full_path && access(full_path, 	X_OK) == 0)
+			if (full_path && access(full_path, X_OK) == 0)
 			{
 				free_arr(paths);
 				return (full_path);
@@ -89,27 +88,35 @@ int	find_command_path(t_command *cmd, char **envp)
 	return (0);
 }
 
-int execute_single_external(t_shell_data *shell, t_command *cmd)
+int	execute_single_external(t_shell_data *shell, t_command *cmd)
 {
 	pid_t	pid;
 	int		status;
 
 	if (find_command_path(cmd, shell->envp) == 1)
-		return (ft_dprintf(2, "minishell: %s: command not found\n", cmd->argv[0]), 127);
+		return (ft_dprintf(2, "minishell: %s: command not found\n",
+				cmd->argv[0]), 127);
 	pid = fork();
 	if (pid < 0)
-		return(perror("fork"), 1);
+		return (perror("fork"), 1);
 	else if (pid == 0)
 	{
+		reset_child_signals();
 		if (cmd->redirections)
-            handle_redirections(cmd->redirections);
+			handle_redirections(cmd->redirections);
 		execve(cmd->cmd_path, cmd->argv, shell->envp);
 		perror("execve");
 		exit(EXIT_FAILURE);
 	}
 	else
 	{
+		configure_execution_signals(); // A
 		waitpid(pid, &status, 0);
-		return (WEXITSTATUS(status));
+		configure_interactive_signals(); // A
+		if (WIFSIGNALED(status))
+			status = 128 + WTERMSIG(status);
+		else
+			status = WEXITSTATUS(status);
 	}
+	return (status);
 }

@@ -14,7 +14,8 @@
 
 void	set_last_exit_status(t_shell_data *shell)
 {
-	if ((shell->internal_code == OKAY) || (shell->internal_code == ERROR_CRITICAL))
+	if ((shell->internal_code == OKAY)
+		|| (shell->internal_code == ERROR_CRITICAL))
 		shell->last_exit_status = shell->internal_code;
 	else
 		shell->last_exit_status = 2;

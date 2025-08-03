@@ -6,7 +6,7 @@
 /*   By: abaryshe <abaryshe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 07:40:31 by abaryshe          #+#    #+#             */
-/*   Updated: 2025/07/18 00:53:12 by abaryshe         ###   ########.fr       */
+/*   Updated: 2025/07/21 22:03:28 by abaryshe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,17 +18,17 @@
 
 # include "libft.h"
 # include "ms_structs.h"
-# include <asm-generic/signal-defs.h> // !
-# include <bits/sigaction.h>          // !
+# include <asm-generic/signal-defs.h>
+# include <bits/sigaction.h>
 # include <curses.h>
 # include <dirent.h>
 # include <errno.h>
 # include <fcntl.h>
-# include <limits.h> // For PATH_MAX
+# include <limits.h>
 # include <readline/history.h>
 # include <readline/readline.h>
 # include <signal.h>
-# include <stdbool.h> // For bool type
+# include <stdbool.h>
 # include <stdio.h>
 # include <stdlib.h>
 # include <string.h>
@@ -54,23 +54,35 @@ extern volatile sig_atomic_t	g_received_signal_value;
 # define EXIT_CD_CMD_N_FOUND 127
 # define EXIT_CD_SIGINT 130
 
-# define EXIT_MSG_OK "\e[0;36mexiting the minishell\n\e[0m"
+# define EXIT_MSG_OK "\e[1;32mexiting the minishell\n\e[0m"
 
-# define ERROR_MSG_CRITICAL_MEM "\e[1;31mCritical\e[0m \e[0;31merror\e[0m: memory failure.\n"
-# define ERROR_MSG_CRITICAL_SIGNALS_INTER "\e[1;31mCritical\e[0m \e[0;31merror\e[0m: failed to configure the signals.\n"
-# define ERROR_MSG_CRITICAL_SIGNALS_HD "\e[1;31mCritical\e[0m \e[0;31merror\e[0m: failed to configure the signals for heredoc.\n"
-# define ERROR_MSG_CRITICAL_SIGNALS_EXEC "\e[1;31mCritical\e[0m \e[0;31merror\e[0m: failed to configure the signals for execution.\n"
-# define ERROR_MSG_CRITICAL_SIGNALS_CHILD "\e[1;31mCritical\e[0m \e[0;31merror\e[0m: failed to configure the signals in child.\n"
-# define ERROR_MSG_CRITICAL_SHELL_DATA "\e[1;31mCritical\e[0m \e[0;31merror\e[0m: failed to create the main data structure.\n"
+# define ERROR_MSG_CRITICAL_MEM "\e[1;31mcritical error\e[0m: memory failure.\n"
+# define ERROR_MSG_CRITICAL_SIGNALS_INTER "\e[1;31mcritical error\e[0m:\
+ failed to configure the signals.\n"
+# define ERROR_MSG_CRITICAL_SIGNALS_HD "\e[1;31mcritical error\e[0m:\
+ failed to configure the signals for heredoc.\n"
+# define ERROR_MSG_CRITICAL_SIGNALS_EXEC "\e[1;31mcritical error\e[0m:\
+ failed to configure the signals for execution.\n"
+# define ERROR_MSG_CRITICAL_SIGNALS_CHILD "\e[1;31mcritical error\e[0m:\
+ failed to configure the signals in child.\n"
+# define ERROR_MSG_CRITICAL_SHELL_DATA "\e[1;31mcritical error\e[0m:\
+ failed to create the main data structure.\n"
 
-# define ERROR_MSG_SINGLE_QUOTE "\e[1;31mSyntax\e[0m \e[0;31merror\e[0m: unclosed single quotes (\').\n"
-# define ERROR_MSG_DOUBLE_QUOTE "\e[1;31mSyntax\e[0m \e[0;31merror\e[0m: unclosed double quotes (\").\n"
-# define ERROR_MSG_REDIR "\e[1;31mSyntax\e[0m \e[0;31merror\e[0m: redirection doesn't have a target.\n"
-# define ERROR_MSG_PIPE "\e[1;31mSyntax\e[0m \e[0;31merror\e[0m: wrong pipe placement.\n"
-# define ERROR_MSG_UNEXPECTED_TOKEN "\e[1;31mSyntax\e[0m \e[0;31merror\e[0m: syntax error near unexpected token.\n"
-# define ERROR_MSG_UNIQUE "\e[1;31mSyntax\e[0m \e[0;31merror\e[0m: an unique error occured.\n"
+# define ERROR_MSG_SINGLE_QUOTE "\e[1;31msyntax error\e[0m:\
+ unclosed single quotes (\').\n"
+# define ERROR_MSG_DOUBLE_QUOTE "\e[1;31msyntax error\e[0m:\
+ unclosed double quotes (\").\n"
+# define ERROR_MSG_REDIR "\e[1;31msyntax error\e[0m:\
+ redirection doesn't have a target.\n"
+# define ERROR_MSG_PIPE "\e[1;31msyntax error\e[0m:\
+ wrong pipe placement.\n"
+# define ERROR_MSG_UNEXPECTED_TOKEN "\e[1;31mSyntax error\e[0m:\
+ syntax error near unexpected token.\n"
+# define ERROR_MSG_UNIQUE "\e[1;31msyntax error\e[0m:\
+ an unique error occured.\n"
 
-# define WARNING_MSG_HEREDOC_EOF "\e[1;33mHeredoc\e[0m \e[0;33mwarning\e[0m: EOF was encountered instead of a delimiter.\n"
+# define WARNING_MSG_HEREDOC_EOF "\e[1;33mheredoc warning\e[0m:\
+ EOF was encountered instead of a delimiter.\n"
 
 // <<<<<<<<<<<<<<<<<<<<< FUNCTIONS >>>>>>>>>>>>>>>>>>>>>
 
@@ -81,19 +93,22 @@ t_shell_data					*init_shell_data(char const **envp);
 // signals.c:
 int								configure_interactive_signals(void);
 int								configure_heredoc_signals(void);
+
+// signals_2.c:
 int								configure_execution_signals(void);
 int								reset_child_signals(void);
-
-// process_signals.c:
 void							process_pending_signal(t_shell_data *shell);
+void							process_last_status(t_shell_data *shell);
 
 // cleanup.c:
 void							free_redir_list(t_redirection **redirections);
 void							free_cmd(t_command *cmd);
 void							free_cmd_list(t_command **pipeline_head);
-void							free_command_list(t_command *cmd);
 void							*free_string_array(char **envp_copy);
 void							*free_shell(t_shell_data *shell);
+
+// cleanup_fds.c:
+void							close_heredoc_fds(t_command *command_list);
 
 // prompt.c:
 
@@ -117,15 +132,21 @@ int								builtin_pwd(char **args);
 int								builtin_unset(char **args, char ***envp);
 
 int								count_commands(t_command *cmd);
-int								setup_pipeline(t_pipex *pipex);
+
 void							free_pipex(t_pipex *pipex);
-void							close_all_pipes(t_pipex *pipex);
+void							close_prev_pipes(t_pipex *pipex);
+void							close_curr_pipes(t_pipex *pipex);
 int								handle_fork_failure(t_pipex *pipex,
 									int created_pids);
-
+int								child_process(t_command *cmd_head,
+									t_command *cmd, t_shell_data *shell,
+									t_pipex *pipex);
+void							child_cleanup_exit(t_shell_data *shell,
+									t_command *cmd_head, t_pipex *pipex,
+									int status);
 int								execute_single_external(t_shell_data *shell,
 									t_command *cmd);
-int								execute_builtin_with_redir(t_shell_data *shell,
+int								exec_builtin_redir(t_shell_data *shell,
 									char **argv, t_redirection *redirections);
 int								execute_pipeline(t_shell_data *shell,
 									t_command *cmd);
@@ -134,9 +155,9 @@ int								executor(t_shell_data *shell, t_command *cmd);
 int								find_command_path(t_command *cmd, char **envp);
 int								count_commands(t_command *cmd);
 
-int								handle_redirections(t_redirection *redir);
+int								handle_cmd_redirections(t_redirection *redir);
 int								handle_redirections_only(t_redirection *redir);
-
+void							free_arr(char **arr);
 // -------------------- parsing --------------------
 
 //                <C>   core_parsing   <C>
@@ -220,7 +241,6 @@ void							add_cmd_back(t_command **pipeline_head,
 int								is_redir_token(t_token_type type);
 void							add_redir_back(t_redirection **redirections,
 									t_redirection *new_redir);
-t_redir_type					convert_token_type_to_redir_type(t_token_type token_type);
 t_redirection					*create_redirection(t_token **token_now,
 									t_token_type token_type,
 									t_shell_data *shell);
@@ -240,7 +260,7 @@ int								process_single_heredoc(t_redirection *redir,
 									t_shell_data *shell);
 
 // errors_parser.c:
-void							print_and_set_parser_errors(t_shell_data *shell);
+void							print_n_set_parser_errors(t_shell_data *shell);
 
 //                <T>   testing   <T>
 // print_token.c:

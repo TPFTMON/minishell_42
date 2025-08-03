@@ -10,32 +10,32 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+// #include "minishell.h"
 
-void	print_token(t_token *token)
-{
-	if (!token)
-	{
-		printf("(NULL)\n");
-		return ;
-	}
-	printf("Token Type: [%d], Content: [%s]\n \\/\n", token->type,
-		token->content);
-}
+// void	print_token(t_token *token)
+// {
+// 	if (!token)
+// 	{
+// 		printf("(NULL)\n");
+// 		return ;
+// 	}
+// 	printf("Token Type: [%d], Content: [%s]\n \\/\n", token->type,
+// 		token->content);
+// }
 
-void	print_token_list(t_token **tokens)
-{
-	t_token	*current;
-	size_t	i;
+// void	print_token_list(t_token **tokens)
+// {
+// 	t_token	*current;
+// 	size_t	i;
 
-	current = *tokens;
-	i = 0;
-	while (current)
-	{
-		printf("Token's index: [%zu], ", i++);
-		print_token(current);
-		current = current->next;
-	}
-	print_token(current);
-	printf("\n");
-}
+// 	current = *tokens;
+// 	i = 0;
+// 	while (current)
+// 	{
+// 		printf("Token's index: [%zu], ", i++);
+// 		print_token(current);
+// 		current = current->next;
+// 	}
+// 	print_token(current);
+// 	printf("\n");
+// }

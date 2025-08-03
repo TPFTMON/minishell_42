@@ -6,7 +6,7 @@
 /*   By: abaryshe <abaryshe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/24 19:17:32 by sguan             #+#    #+#             */
-/*   Updated: 2025/07/03 03:30:59 by abaryshe         ###   ########.fr       */
+/*   Updated: 2025/07/20 15:53:15 by sguan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,16 +16,12 @@ int	builtin_pwd(char **args)
 {
 	char	cwd[4096];
 
-	if (args[1])
-	{
-		ft_dprintf(2, "pwd: too many arguments\n");
-		return (1);
-	}
+	(void)args;
 	if (getcwd(cwd, sizeof(cwd)) == NULL)
 	{
 		perror("pwd");
 		return (1);
 	}
-	ft_dprintf(2, "%s\n", cwd);
+	ft_dprintf(1, "%s\n", cwd);
 	return (0);
 }

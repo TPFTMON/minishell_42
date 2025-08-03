@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_exit.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sguan <sguan@student.42.fr>                +#+  +:+       +#+        */
+/*   By: abaryshe <abaryshe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/02 23:21:55 by sguan             #+#    #+#             */
-/*   Updated: 2025/07/15 16:10:19 by sguan            ###   ########.fr       */
+/*   Updated: 2025/07/19 17:06:57 by abaryshe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,5 +57,7 @@ int	builtin_exit(t_shell_data *shell, char **args)
 		else
 			exit_value = (unsigned char)value;
 	}
+	free_cmd_list(&shell->current_command);
+	free_shell(shell);
 	exit(exit_value);
 }

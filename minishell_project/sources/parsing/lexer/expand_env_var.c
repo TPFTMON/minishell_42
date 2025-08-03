@@ -39,8 +39,10 @@ void	append_internal_code(t_str_buffer *buf, t_shell_data *shell)
 /**
  * @brief Scans after ('$') to find the env variable name.
  *
- * This function is suposed to be used after the ('$') is encountered on the input.
- * This function will scan the characters after the index (i) until the non-env character is encountered.
+ * This function is suposed to be used after the ('$')
+ *  is encountered on the input.
+ * This function will scan the characters after
+ *  the index (i) until the non-env character is encountered.
  * After it will return the allocated with malloc name of the env variable.
  *
  * @param input The string on which to look for.
@@ -95,7 +97,8 @@ char	*get_env_val(char *name_to_find, t_shell_data *shell)
 	return (value);
 }
 
-void	append_env_name(t_str_buffer *buf, char *input, int *i, t_shell_data *shell)
+void	append_env_name(t_str_buffer *buf, char *input, int *i,
+		t_shell_data *shell)
 {
 	char	*env_value;
 	char	*name_to_find;
@@ -112,7 +115,8 @@ void	append_env_name(t_str_buffer *buf, char *input, int *i, t_shell_data *shell
 	free(env_value);
 }
 
-void	expand_env_var(t_str_buffer *buf, char *input, int *i, t_shell_data *shell)
+void	expand_env_var(t_str_buffer *buf, char *input, int *i,
+		t_shell_data *shell)
 {
 	if (input[*i] != '$')
 		return ;

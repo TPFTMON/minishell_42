@@ -56,7 +56,7 @@ t_token	*lex_input(char *input, t_shell_data *shell)
 // t_token	*get_next_token(char *input, int *i, t_shell_data *shell)
 // {
 // 	t_token	*new_token;
-// 	  // A. Check for Operator Tokens (easiest case)
+// 		// A. Check for Operator Tokens (easiest case)
 //   //    Check for 2-character operators first!
 //   if line starts with ">>" at index i:
 //     create TOKEN_REDIR_APPEND with value ">>"
@@ -136,26 +136,26 @@ t_token	*lex_input(char *input, t_shell_data *shell)
 
 // t_token	*tokenize_input(char *input, t_token *tokens, t_shell_data *shell)
 // {
-	// int		i;
-	// int		input_len;
-	// t_token	*new_token;
+// int		i;
+// int		input_len;
+// t_token	*new_token;
 //
-	// i = 0;
-	// input_len = ft_strlen(input);
-	// while (i < input_len)
-	// {
-		// while (ft_isspace(input[i]))
-			// i++;
-		// if (i >= input_len)
-			// break ;
-		// new_token = get_next_token(input, &i, shell);
-		// if (new_token->type == TOKEN_ERROR)
-		// {
-			// print_error(NULL, "Error: syntax\n");
-			// free_token_list(tokens);
-			// return (NULL);
-		// }
-		// add_token_back(tokens, new_token);
-	// }
-	// return (tokens);
+// i = 0;
+// input_len = ft_strlen(input);
+// while (i < input_len)
+// {
+// while (ft_isspace(input[i]))
+// i++;
+// if (i >= input_len)
+// break ;
+// new_token = get_next_token(input, &i, shell);
+// if (new_token->type == TOKEN_ERROR)
+// {
+// print_error(NULL, "Error: syntax\n");
+// free_token_list(tokens);
+// return (NULL);
+// }
+// add_token_back(tokens, new_token);
+// }
+// return (tokens);
 // }

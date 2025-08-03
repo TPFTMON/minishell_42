@@ -30,6 +30,7 @@ void	free_token_list(t_token **tokens)
 		current = next;
 	}
 }
+
 /*
  * Free the t_str_buffer and its contents entirely.
  */
@@ -41,14 +42,3 @@ void	free_str_buffer(t_str_buffer *buf)
 		free(buf->str);
 	free(buf);
 }
-
-// void	free_parsing(t_token *tokens, t_command *commands)
-// {
-// 	if (tokens)
-// 		free_token_list(tokens);
-// 	if (commands)
-// 		free_command_list(commands);
-// }
-
-
-

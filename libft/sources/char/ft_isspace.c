@@ -16,11 +16,12 @@
  * @brief Checks if the character is a whitespace character.
  *
  * This function checks if the given character is a whitespace character,
- * which includes space, horizontal tab ('\t'), new line ('\n'), vertical tab ('\v'),
- * form feed ('\f') and carriage return ('\r').
+ * which includes space, horizontal tab ('\t'), new line ('\n'),
+ * vertical tab ('\v'), form feed ('\f') and carriage return ('\r').
  *
  * @param c The character to check.
- * @return Returns the ascii value of a character if it is a whitespace character, otherwise returns 0.
+ * @return Returns the ascii value of a character if it
+ *  is a whitespace character, otherwise returns 0.
  */
 int	ft_isspace(int c)
 {

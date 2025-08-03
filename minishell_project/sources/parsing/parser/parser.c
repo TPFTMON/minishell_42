@@ -79,7 +79,7 @@ t_command	*build_cmd_list(t_token **tokens, t_shell_data *shell)
 		if (shell->internal_code != OKAY)
 		{
 			free_cmd(current_cmd);
-			print_and_set_parser_errors(shell);
+			print_n_set_parser_errors(shell);
 			free_cmd_list(&pipeline_head);
 			return (NULL);
 		}

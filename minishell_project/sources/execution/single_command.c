@@ -6,7 +6,7 @@
 /*   By: abaryshe <abaryshe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 22:20:02 by sguan             #+#    #+#             */
-/*   Updated: 2025/07/18 00:52:54 by abaryshe         ###   ########.fr       */
+/*   Updated: 2025/07/21 22:19:53 by abaryshe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,19 +19,6 @@ int	is_builtin(const char *cmd)
 	return (!ft_strcmp(cmd, "echo") || !ft_strcmp(cmd, "cd") || !ft_strcmp(cmd,
 			"pwd") || !ft_strcmp(cmd, "export") || !ft_strcmp(cmd, "unset")
 		|| !ft_strcmp(cmd, "env") || !ft_strcmp(cmd, "exit"));
-}
-
-void	free_arr(char **arr)
-{
-	int	i;
-
-	i = 0;
-	while (arr[i])
-	{
-		free(arr[i]);
-		i++;
-	}
-	free(arr);
 }
 
 static char	*try_path_cmd(char **paths, char *cmd)
@@ -60,6 +47,7 @@ static char	*try_path_cmd(char **paths, char *cmd)
 	free_arr(paths);
 	return (NULL);
 }
+
 int	find_command_path(t_command *cmd, char **envp)
 {
 	char	**paths;
@@ -88,11 +76,22 @@ int	find_command_path(t_command *cmd, char **envp)
 	return (0);
 }
 
+void	handle_exec_external_child(t_shell_data *shell, t_command *cmd)
+{
+	reset_child_signals();
+	if (cmd->redirections)
+		handle_cmd_redirections(cmd->redirections);
+	execve(cmd->cmd_path, cmd->argv, shell->envp);
+	perror("execve");
+	exit(EXIT_FAILURE);
+}
+
 int	execute_single_external(t_shell_data *shell, t_command *cmd)
 {
 	pid_t	pid;
 	int		status;
 
+	status = 0;
 	if (find_command_path(cmd, shell->envp) == 1)
 		return (ft_dprintf(2, "minishell: %s: command not found\n",
 				cmd->argv[0]), 127);
@@ -100,19 +99,12 @@ int	execute_single_external(t_shell_data *shell, t_command *cmd)
 	if (pid < 0)
 		return (perror("fork"), 1);
 	else if (pid == 0)
-	{
-		reset_child_signals();
-		if (cmd->redirections)
-			handle_redirections(cmd->redirections);
-		execve(cmd->cmd_path, cmd->argv, shell->envp);
-		perror("execve");
-		exit(EXIT_FAILURE);
-	}
+		handle_exec_external_child(shell, cmd);
 	else
 	{
-		configure_execution_signals(); // A
+		configure_execution_signals();
 		waitpid(pid, &status, 0);
-		configure_interactive_signals(); // A
+		configure_interactive_signals();
 		if (WIFSIGNALED(status))
 			status = 128 + WTERMSIG(status);
 		else

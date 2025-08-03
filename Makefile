@@ -6,7 +6,7 @@
 #    By: abaryshe <abaryshe@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/04/23 07:30:50 by abaryshe          #+#    #+#              #
-#    Updated: 2025/07/18 00:53:21 by abaryshe         ###   ########.fr        #
+#    Updated: 2025/07/21 22:05:52 by abaryshe         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -49,14 +49,16 @@ MAIN_SRC = minishell_project/sources/minishell.c
 CORE_FILES = initialization.c \
 			cleanup.c \
 			signals.c \
-			process_signals.c
+			signals_2.c \
+			cleanup_fds.c
 
 # execution files
 EXEC_FILES = executor.c\
 			single_command.c \
 			pipeline.c \
 			pipeline_utils.c\
-			redirections.c
+			redirections.c\
+			child.c
 
 BUILTINS_FILES = builtin_cd.c \
 			builtin_echo.c \

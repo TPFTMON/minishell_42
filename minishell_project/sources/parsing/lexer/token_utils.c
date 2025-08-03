@@ -16,7 +16,7 @@
  * Creates and returns a new allocated token with the specified type and content.
  * The content is duplicated using malloc.
  * token->next is initialized to NULL.
-*/
+ */
 t_token	*init_token(t_token_type type, char *content, t_shell_data *shell)
 {
 	t_token	*new_token;

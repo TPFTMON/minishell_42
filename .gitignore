@@ -1,3 +1,4 @@
+*.txt
 a.out
 test_arg.c
 what
@@ -7,8 +8,17 @@ minishell
 objects
 *.o
 minishell.h.gch
-*.txt
 libft.a
 test_tokens
 miaou
 testing
+.vscode/
+*.txt
+*.o/
+tests/
+what.txt
+heredoc
+MIAOU
+outfile
+waf
+WAF

@@ -6,7 +6,7 @@
 /*   By: sguan <sguan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/30 17:42:57 by sguan             #+#    #+#             */
-/*   Updated: 2025/06/27 18:54:28 by sguan            ###   ########.fr       */
+/*   Updated: 2025/07/19 16:31:31 by sguan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ int	validate_unset_key(char *arg)
 	}
 	return (1);
 }
+
 void	remove_env_value(char ***envp, int i)
 {
 	free((*envp)[i]);

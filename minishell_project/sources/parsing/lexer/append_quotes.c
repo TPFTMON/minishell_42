@@ -12,7 +12,8 @@
 
 #include "minishell.h"
 
-void	append_single_quotes(t_str_buffer *buf, char *input, int *i, t_shell_data *shell)
+void	append_single_quotes(t_str_buffer *buf, char *input, int *i,
+		t_shell_data *shell)
 {
 	int	j;
 
@@ -32,7 +33,8 @@ void	append_single_quotes(t_str_buffer *buf, char *input, int *i, t_shell_data *
 	(*i)++;
 }
 
-void	append_double_quotes(t_str_buffer *buf, char *input, int *i, t_shell_data *shell)
+void	append_double_quotes(t_str_buffer *buf, char *input, int *i,
+		t_shell_data *shell)
 {
 	int	j;
 

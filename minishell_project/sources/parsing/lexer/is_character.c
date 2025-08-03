@@ -6,7 +6,7 @@
 /*   By: abaryshe <abaryshe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/09 17:19:09 by abaryshe          #+#    #+#             */
-/*   Updated: 2025/06/28 14:02:43 by abaryshe         ###   ########.fr       */
+/*   Updated: 2025/07/19 16:36:28 by abaryshe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,9 @@ int	is_metacharacter(int c, int expanded)
 // 	ch1 = '$';
 // 	f_ch1 = 'a';
 // 	f_ch2 = '<';
-// 	printf("ch: %d, f_ch: %d\n", is_metacharacter(ch, 0), is_metacharacter(f_ch, 0));
-// 	printf("ch1: %d, f_ch1: %d, f_ch2: %d\n", is_metacharacter(ch1, 1), is_metacharacter(f_ch1, 1), is_metacharacter(f_ch2, 1));
+// 	printf("ch: %d, f_ch:
+// 	%d\n", is_metacharacter(ch, 0), is_metacharacter(f_ch, 0));
+// 	printf("ch1: %d, f_ch1: %d, f_ch2: %d\n", is_metacharacter(ch1, 1),
+// 	is_metacharacter(f_ch1, 1), is_metacharacter(f_ch2, 1));
 // 	return (0);
 // }

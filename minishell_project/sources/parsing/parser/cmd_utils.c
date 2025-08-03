@@ -23,13 +23,6 @@ t_command	*init_cmd(t_shell_data *shell)
 		return (NULL);
 	}
 	cmd->argv = NULL;
-	// cmd->argv = (char **)malloc(sizeof(char *) * 1);
-	// if (!cmd->argv)
-	// {
-	// 	shell->internal_code = ERROR_CRITICAL;
-	// 	return (NULL);
-	// }
-	// cmd->argv[0] = NULL;
 	cmd->cmd_path = NULL;
 	cmd->redirections = NULL;
 	cmd->next_in_pipe = NULL;

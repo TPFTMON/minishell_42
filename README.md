@@ -20,6 +20,4 @@ Good luck with that!🤘💪🧠
 This is out with minishell done with teammate. We separated the work into the PARSING and EXECUTION. I've chosen to do the PARSING.
 I will tell about this the most important for me project in much more details later :)
 
-1. Right now it contains only my part done, the parsing.
-
-2. Parsing + Execution
+The project was finished. This version of it was validated. It was done by my friend Yan and me, both students of 42 Paris.
